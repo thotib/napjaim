@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Visszaszámláló a nyugdíjig</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f2027">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    #countdown {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .time-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      min-width: 80px;
+    }
+
+    .number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #00ffcc;
+      display: inline-block;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #ddd;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+      .number {
+        font-size: 2rem;
+      }
+      .time-box {
+        padding: 15px;
+        min-width: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Nyugdíjba vonulásom napja: 2026. június 26. Hátralévő idő:</h1>
+  <div id="countdown"></div>
+
+  <script>
+    const target = new Date("2026-06-26T00:00:00").getTime();
+
+    function createBox(value, label) {
+      return `
+        <div class="time-box">
+          <div class="number">${value}</div>
+          <div class="label">${label}</div>
+        </div>
+      `;
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").innerHTML = "<h2>⏰ Eljött a nap!</h2>";
+        clearInterval(timer);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").innerHTML =
+        createBox(days, "nap") +
+        createBox(hours, "óra") +
+        createBox(minutes, "perc") +
+        createBox(seconds, "mp");
+    }
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+    // Service worker regisztráció (offline működéshez)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</body>
+</html>
