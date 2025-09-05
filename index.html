@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Visszaszámláló a nyugdíjig</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="icon.png" />
   <style>
     :root {
       --blur-strength: 20px;   /* Elmosás erőssége */
@@ -56,7 +55,7 @@
       box-shadow: inset 0 0 150px rgba(0,0,0,0.7); /* Vignetta-hatás */
     }
 
-    /* 🔹 Tartalomdoboz (minden szöveg + számláló együtt) */
+    /* 🔹 Tartalomdoboz */
     .content-box {
       background: rgba(0, 0, 0, 0.4);
       padding: 20px 30px;
@@ -101,6 +100,12 @@
       color: #ddd;
     }
 
+    #ageBox {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: white;
+    }
+
     @media (max-width: 500px) {
       h1 {
         font-size: 1.1rem;
@@ -115,6 +120,9 @@
       .content-box {
         padding: 15px 20px;
       }
+      #ageBox {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -123,9 +131,11 @@
     <h1 style="margin-bottom: 0;">Nyugdíjba vonulásom napja: 2026. június 26.</h1>
     <h1 style="font-size: 1.35rem; margin-top: 5px;">Hátralévő idő:</h1>
     <div id="countdown"></div>
+    <div id="ageBox"></div> <!-- 🔹 Itt jelenik meg a születés óta eltelt idő -->
   </div>
 
   <script>
+    // Nyugdíj visszaszámláló
     const target = new Date("2026-06-26T00:00:00").getTime();
 
     function createBox(value, label) {
@@ -161,6 +171,30 @@
 
     updateCountdown();
     const timer = setInterval(updateCountdown, 1000);
+
+    // 🔹 Eltelt évek és napok számítása
+    function yearsAndDaysSince(startDateStr) {
+      const startDate = new Date(startDateStr);
+      const today = new Date();
+
+      let years = today.getFullYear() - startDate.getFullYear();
+      const thisYearBirthday = new Date(today.getFullYear(), startDate.getMonth(), startDate.getDate());
+      if (today < thisYearBirthday) {
+        years--;
+      }
+
+      const lastBirthday = new Date(startDate.getFullYear() + years, startDate.getMonth(), startDate.getDate());
+      const diffMs = today - lastBirthday;
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      return { years, days };
+    }
+
+    // 🔹 Példa: saját születésnap
+    const birthDate = "1961-06-26";  // <-- ezt cseréld a sajátodra
+    const result = yearsAndDaysSince(birthDate);
+    document.getElementById("ageBox").textContent =
+      `Születésem óta eltelt: ${result.years} év és ${result.days} nap`;
   </script>
 </body>
 </html>
