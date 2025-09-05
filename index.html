@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <title>Visszaszámláló a nyugdíjig</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="icon.png" />
+
+  <!-- 🔹 Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+
   <style>
     :root {
       --blur-strength: 20px;   /* Elmosás erőssége */
@@ -104,7 +108,7 @@
     #ageBox {
       margin-top: 20px;
       font-size: 1.2rem;
-      color: white;
+      color: #ffdd88;
     }
 
     @media (max-width: 500px) {
@@ -129,15 +133,33 @@
 </head>
 <body>
   <div class="content-box">
-    <h1 style="margin-bottom: 0;">Nyugdíjba vonulásom napja: 2026. június 26.</h1>
+    <h1 id="retireDateText" style="margin-bottom: 0;"></h1>
     <h1 style="font-size: 1.35rem; margin-top: 5px;">Hátralévő idő:</h1>
     <div id="countdown"></div>
-    <div id="ageBox"></div> <!-- 🔹 Itt jelenik meg a születés óta eltelt idő -->
+    <div id="ageBox"></div>
   </div>
 
   <script>
-    // Nyugdíj visszaszámláló
-    const target = new Date("2026-06-26T00:00:00").getTime();
+    // 🔹 Születési dátum (állítsd be magadnak)
+    const birthDate = "1961-06-26";  // <-- saját születésnapod (YYYY-MM-DD)
+
+    // 🔹 Nyugdíj dátuma = születés + 65 év
+    const birth = new Date(birthDate);
+    const retire = new Date(birth);
+    retire.setFullYear(retire.getFullYear() + 65);
+
+    // Magyar hónapnevek
+    const honapok = [
+      "január", "február", "március", "április", "május", "június",
+      "július", "augusztus", "szeptember", "október", "november", "december"
+    ];
+
+    // Szövegesen kiírjuk a nyugdíj napját
+    const retireText = `Nyugdíjba vonulásom napja: ${retire.getFullYear()}. ${honapok[retire.getMonth()]} ${retire.getDate()}.`;
+    document.getElementById("retireDateText").textContent = retireText;
+
+    // 🔹 Nyugdíj visszaszámláló
+    const target = retire.getTime();
 
     function createBox(value, label) {
       return `
@@ -191,8 +213,7 @@
       return { years, days };
     }
 
-    // 🔹 Példa: saját születésnap
-    const birthDate = "1961-06-26";  // <-- ezt cseréld a sajátodra
+    // 🔹 Kiírás: születéstől eltelt idő
     const result = yearsAndDaysSince(birthDate);
     document.getElementById("ageBox").textContent =
       `Születésem óta eltelt: ${result.years} év és ${result.days} nap`;
