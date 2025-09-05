@@ -107,7 +107,7 @@
 
     #ageBox {
       margin-top: 20px;
-      font-size: 1.2rem;
+      font-size: 0.8rem;
       color: #ffdd88;
     }
 
@@ -134,7 +134,7 @@
 <body>
   <div class="content-box">
     <h1 id="retireDateText" style="margin-bottom: 0;"></h1>
-    <h1 style="font-size: 1.35rem; margin-top: 5px;">Hátralévő idő:</h1>
+    <!-- <h1 style="font-size: 1.35rem; margin-top: 5px;">Hátralévő idő:</h1> -->
     <div id="countdown"></div>
     <div id="ageBox"></div>
   </div>
@@ -155,7 +155,8 @@
     ];
 
     // Szövegesen kiírjuk a nyugdíj napját
-    const retireText = `Nyugdíjba vonulásom napja: ${retire.getFullYear()}. ${honapok[retire.getMonth()]} ${retire.getDate()}.`;
+    // const retireText = `Nyugdíjba vonulásom napja: ${retire.getFullYear()}. ${honapok[retire.getMonth()]} ${retire.getDate()}.`;
+    const retireText = `Nyugdíjazásomig hátralévő idő:`
     document.getElementById("retireDateText").textContent = retireText;
 
     // 🔹 Nyugdíj visszaszámláló
